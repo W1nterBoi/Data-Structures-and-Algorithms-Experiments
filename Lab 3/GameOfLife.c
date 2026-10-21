@@ -30,7 +30,8 @@ void printMatrix(int **matrix, int row, int coloumn){
         printf("\n");
     }
 }
-void conwaythatshit(int **matrix, int **tile, char **display, int row, int coloumn){
+
+void progressAge(int **matrix, int **tile, char **display, int row, int coloumn){
     for(int i = 0; i < row; i++){
         for(int j = 0; j < coloumn; j++){
             int k = 0;
@@ -58,53 +59,57 @@ void conwaythatshit(int **matrix, int **tile, char **display, int row, int colou
                 display[i][j] = ' ';
             } else{
                 matrix[i][j] = 1;
-                display[i][j] = '#';
+                display[i][j] = '@';
             }
             //tile[i][j] = 0;
         }
     }
 }
 
+void assignAlive(int **life, char **displayable, int row, int coloumn){
+    life[row][coloumn] = 1;
+    displayable[row][coloumn] = '@';
+}
 
 
 int main(){
     int **life, **tile;
     char **displayable;
 
-    allocateMem(&life, 10, 10);
-    allocateMem(&tile, 10, 10);
-    allocateMemC(&displayable, 10, 10);
-    for (int i = 0; i < 10; i++) {
-        for (int j = 0; j < 10; j++) {
+    int worldW, worldB;
+
+    printf("Enter Breadth and Width of World: ");
+    scanf("%d %d", &worldB, &worldW);
+
+    allocateMem(&life, worldB, worldW);
+    allocateMem(&tile, worldB, worldW);
+    allocateMemC(&displayable, worldB, worldW);
+    for (int i = 0; i < worldB; i++) {
+        for (int j = 0; j < worldW; j++) {
             life[i][j] = 0;
             tile[i][j] = 0;
             displayable[i][j] = ' ';
         }
     }
 
-    life[4][4] = 1;
-    life[5][4] = 1;
-    life[4][5] = 1;
-    life[3][3] = 1; 
-    printf("\nAge Zero\n");
-    printMatrixC(displayable, 10, 10);
+    assignAlive(life, displayable, 4, 5); 
+    assignAlive(life, displayable, 5, 5); 
+    assignAlive(life, displayable, 4, 4); 
+    assignAlive(life, displayable, 5, 4); 
 
-    printf("\nAge One\n");
-    conwaythatshit(life, tile, displayable, 10, 10);
-    printMatrixC(displayable, 10, 10);
-    //printf("\nTile\n");
-    //printMatrix(tile, 10, 10);
-    
-    printf("\nAge Two\n");
-    conwaythatshit(life, tile, displayable, 10, 10);
-    printMatrixC(displayable, 10, 10);
-    //printf("\nTile\n");
-    //printMatrix(tile, 10, 10);
-    
-    printf("\nAge Three\n");
-    conwaythatshit(life, tile, displayable, 10, 10);
-    printMatrixC(displayable, 10, 10);
-    //printf("\nTile\n");
-    //printMatrix(tile, 10, 10);
+    int ages;
+
+    printf("Length of Simulation (In Ages) : ");
+    scanf("%d", &ages);
+
+    printf("\nAge 0\n");
+    printMatrixC(displayable, worldB, worldW);
+
+    for(int i = 1; i <= ages; i++){
+        printf("\nAge %d\n", i);
+        progressAge(life, tile, displayable, worldB, worldW);
+        printMatrixC(displayable, worldB, worldW);
+    }
+
     return 0;
 }
